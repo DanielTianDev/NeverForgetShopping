@@ -5,11 +5,20 @@
     android:orientation="vertical"
     android:weightSum="10">
 
+    <TextView
+        android:id="@+id/shopping_userName"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+
     <ListView
         android:id="@+id/shopping_listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_weight="7">
 
     </ListView>
 
@@ -37,8 +46,10 @@
         android:id="@+id/btnClear"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:onClick="ClearShoppingList"
         android:layout_weight="1"
+        android:background="@drawable/ic_launcher_background"
+        android:onClick="ClearShoppingListNetworked"
         android:text="Clear" />
+
 
 </LinearLayout>

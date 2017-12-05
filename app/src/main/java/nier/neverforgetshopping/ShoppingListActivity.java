@@ -1,39 +1,28 @@
 package nier.neverforgetshopping;
 
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
-import java.io.*;
-import java.net.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import OfflineServices.SharedPreferencesList;
+import RestfulServices.RestfulController;
 
 
 /**
- * Created by Kirito on 2017-11-23.
+ * Created by Dan on 2017-11-23.
  */
 
 public class ShoppingListActivity extends Activity{
-
-
-    public final static String SERVER_URL =  "http://danieltian.com/"; //"http://10.0.2.2:666/"; http://66.183.145.51
 
     private ListView mShoppingList;
     private EditText mItemEdit;
@@ -41,54 +30,73 @@ public class ShoppingListActivity extends Activity{
     private ArrayAdapter<String> mAdapter;
 
     private ArrayList<String> shoppingListItems = new ArrayList<String>();
-    private ArrayList<String> addedItems = new ArrayList<String>();
-
     String teststr = "";
+    SharedPreferencesList localPreferences;
+
+    RestfulController restController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
 
-
-        mShoppingList = (ListView) findViewById(R.id.shopping_listView);
-        mItemEdit = (EditText) findViewById(R.id.item_editText);
-        mAddButton = (Button) findViewById(R.id.add_button);
+        mShoppingList =  findViewById(R.id.shopping_listView);
+        mItemEdit = findViewById(R.id.item_editText);
+        mAddButton = findViewById(R.id.add_button);
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         mShoppingList.setAdapter(mAdapter);
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String item = mItemEdit.getText().toString();
                 mAdapter.add(item);
                 mAdapter.notifyDataSetChanged();
                 mItemEdit.setText("");
-
-                try{
-                    new AddItemTask().execute(item);
-                }catch (Exception e){
-                    Log.e(MainActivity.DEBUG_DEFAULT_TAG, e.getMessage());
-                }
-
-
-
+                localPreferences.AddItemToSharedPreferences(item, shoppingListItems);
             }
         });
 
+        Context context = getApplicationContext();
+        localPreferences = new SharedPreferencesList(context);
+        GetItemsFromPreferences();
+        /*
         try{
             new RetrieveFeedTask().execute(SERVER_URL+"api.php");
            // Log.e(MainActivity.DEBUG_DEFAULT_TAG, "test msg: " + teststr);
         }catch (Exception e){
             Log.e(MainActivity.DEBUG_DEFAULT_TAG, e.getMessage());
         }
-
         Timer timer = new Timer();
         timer.schedule(new RetrieveAllItems(), 0, 2500);
+        */
+    }
+
+
+    void GetItemsFromPreferences(){
+
+        try{
+            localPreferences.GetItemsFromPreferences(shoppingListItems, mAdapter);
+        }catch (Exception e){
+            Log.e(MainActivity.DEBUG_DEFAULT_TAG, "Exception occured at GetItemsFromPreferences");
+        }
 
     }
 
 
+    void ClearShoppingList(View view){
+        localPreferences.ClearSharedPreferences(view, shoppingListItems, mAdapter);
+    }
+
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
     public static String getHTML(String urlToRead) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
@@ -209,8 +217,8 @@ public class ShoppingListActivity extends Activity{
             }
         }
 
-
         return false;
     }
 
+    */
 }
