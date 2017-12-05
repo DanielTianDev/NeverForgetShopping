@@ -84,7 +84,35 @@ public class RestfulController {
                 }
             }
         });
+
+
     }
+
+    public void AddItemsToShoppingList(String dataStr){
+
+        try{
+
+            shoppingListItems.clear();
+            mAdapter.clear();
+
+            String[] listItems = dataStr.split(DATA_DELIMITER);
+
+            for(int i=0;i<listItems.length;i++){
+                shoppingListItems.add(listItems[i]);
+            }
+
+            for(int i=0;i<shoppingListItems.size();i++){
+                mAdapter.add(shoppingListItems.get(i));
+                //mAdapter.notifyDataSetChanged();
+            }
+
+            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetInvalidated();
+        }catch (Exception e){
+            Log.e(MainActivity.DEBUG_DEFAULT_TAG, "Exception at Restful AddItemsToShoppingList" + e.getMessage());
+        }
+    }
+
 
     public void addDataToDB(final String itemName){
         AsyncTask.execute(new Runnable() {
@@ -114,29 +142,6 @@ public class RestfulController {
                 }
             }
         });
-    }
-
-    public void AddItemsToShoppingList(String dataStr){
-
-        try{
-
-            shoppingListItems.clear();
-            mAdapter.clear();
-
-            String[] listItems = dataStr.split(DATA_DELIMITER);
-
-            for(int i=0;i<listItems.length;i++){
-                shoppingListItems.add(listItems[i]);
-            }
-
-            for(int i=0;i<shoppingListItems.size();i++){
-                mAdapter.add(shoppingListItems.get(i));
-                mAdapter.notifyDataSetChanged();
-            }
-
-        }catch (Exception e){
-            Log.e(MainActivity.DEBUG_DEFAULT_TAG, "Exception at Restful AddItemsToShoppingList" + e.getMessage());
-        }
     }
 
     public void clearDataFromList(){
