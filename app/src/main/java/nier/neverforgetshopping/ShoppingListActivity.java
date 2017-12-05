@@ -30,7 +30,7 @@ public class ShoppingListActivity extends Activity{
     private ArrayAdapter<String> mAdapter;
 
     private ArrayList<String> shoppingListItems = new ArrayList<String>();
-    String teststr = "";
+    public static String mostRecentItem = "";
     SharedPreferencesList localPreferences;
 
     RestfulController restController;
@@ -55,6 +55,7 @@ public class ShoppingListActivity extends Activity{
                 mAdapter.add(item);
                 mAdapter.notifyDataSetChanged();
                 mItemEdit.setText("");
+                mostRecentItem = item;
                 localPreferences.AddItemToSharedPreferences(item, shoppingListItems);
             }
         });
@@ -75,18 +76,21 @@ public class ShoppingListActivity extends Activity{
     }
 
 
-    void GetItemsFromPreferences(){
+    public boolean GetItemsFromPreferences(){
 
         try{
             localPreferences.GetItemsFromPreferences(shoppingListItems, mAdapter);
         }catch (Exception e){
             Log.e(MainActivity.DEBUG_DEFAULT_TAG, "Exception occured at GetItemsFromPreferences");
+            return false;
         }
 
+        return true;
     }
 
 
-    void ClearShoppingList(View view){
+    public void ClearShoppingList(View view){
+        mostRecentItem = "cleared";
         localPreferences.ClearSharedPreferences(view, shoppingListItems, mAdapter);
     }
 

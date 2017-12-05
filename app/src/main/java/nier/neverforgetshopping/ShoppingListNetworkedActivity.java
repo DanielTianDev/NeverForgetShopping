@@ -56,9 +56,6 @@ public class ShoppingListNetworkedActivity extends Activity {
 
         userNameText = findViewById(R.id.shopping_userName);
 
-
-
-
         Intent intent = getIntent();
         userName = intent.getStringExtra(MainActivity.EXTRA_KEY);
         userNameText.setText("Welcome back: " +userName);
@@ -123,11 +120,15 @@ public class ShoppingListNetworkedActivity extends Activity {
 
                     String responseString = ConvertStreamToString(responseBodyStream);
 
-                    String[] listItems = responseString.split(DATA_DELIMITER);
+                    if(responseString.length() > 0){
 
-                    for(int i=0;i<listItems.length;i++){
-                        if(!checkIfItemExists(listItems[i]))
-                            shoppingListItems.add(listItems[i]);
+                        String[] listItems = responseString.split(DATA_DELIMITER);
+                        for(int i=0;i<listItems.length;i++){
+                            if(!checkIfItemExists(listItems[i]))
+                                shoppingListItems.add(listItems[i]);
+                        }
+                    }else{
+                        shoppingListItems.clear();
                     }
 
                     return shoppingListItems;
@@ -155,7 +156,6 @@ public class ShoppingListNetworkedActivity extends Activity {
 
             for(int i=0;i<result.size();i++){
                 mAdapter.add(result.get(i));
-                //mAdapter.notifyDataSetChanged();
             }
 
             mAdapter.notifyDataSetChanged();

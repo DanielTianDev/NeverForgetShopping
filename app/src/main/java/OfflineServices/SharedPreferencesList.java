@@ -21,7 +21,7 @@ public class SharedPreferencesList {
 
     public static final String PREFERENCE_FILE_KEY = "NFSPref";
 
-    SharedPreferences sharedPref;
+    public SharedPreferences sharedPref;
 
     public SharedPreferencesList(Context appContext){
         sharedPref = appContext.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
